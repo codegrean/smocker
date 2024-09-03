@@ -19,6 +19,10 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DATABASE_NAME,
       synchronize: false,
       logging: true,
+      ssl: {
+        rejectUnauthorized: false,
+        requestCert: true,
+      },
     }),
     UsersModule,
   ],
