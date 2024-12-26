@@ -22,6 +22,10 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     create(createUserDto) {
+        const user = this.usersService.findOneByEmail(createUserDto.email);
+        if (user) {
+            throw new common_1.BadRequestException('User already exists');
+        }
         return this.usersService.create(createUserDto);
     }
     findAll() {

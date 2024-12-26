@@ -36,6 +36,9 @@ let UsersService = class UsersService {
     remove(id) {
         return this.userRepository.delete(id);
     }
+    findOneByEmail(email) {
+        return this.userRepository.findOne({ where: { email } });
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
