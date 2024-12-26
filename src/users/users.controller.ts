@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, NotFoundException, BadRequestException, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,8 +9,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersService.findOneByEmail(createUserDto.email)
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.usersService.findOneByEmail(createUserDto.email)
     if (user) {
       throw new BadRequestException('User already exists');
     }
@@ -33,16 +33,18 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return this.usersService.update(+id, updateUserDto);
+    await this.usersService.update(+id, updateUserDto);
+    return { message: 'User successfully updated' };
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async remove(@Param('id') id: string) {
     const user = await this.usersService.findOne(+id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     await this.usersService.remove(+id);
-    return { statusCode: 204, message: 'User successfully deleted' };
+    return { message: 'User successfully deleted' };
   }
 }

@@ -21,8 +21,8 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    create(createUserDto) {
-        const user = this.usersService.findOneByEmail(createUserDto.email);
+    async create(createUserDto) {
+        const user = await this.usersService.findOneByEmail(createUserDto.email);
         if (user) {
             throw new common_1.BadRequestException('User already exists');
         }
@@ -39,7 +39,8 @@ let UsersController = class UsersController {
         if (!user) {
             throw new common_1.NotFoundException('User not found');
         }
-        return this.usersService.update(+id, updateUserDto);
+        await this.usersService.update(+id, updateUserDto);
+        return { message: 'User successfully updated' };
     }
     async remove(id) {
         const user = await this.usersService.findOne(+id);
@@ -47,7 +48,7 @@ let UsersController = class UsersController {
             throw new common_1.NotFoundException('User not found');
         }
         await this.usersService.remove(+id);
-        return { statusCode: 204, message: 'User successfully deleted' };
+        return { message: 'User successfully deleted' };
     }
 };
 exports.UsersController = UsersController;
@@ -81,6 +82,7 @@ __decorate([
 ], UsersController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, common_1.HttpCode)(204),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

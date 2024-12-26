@@ -8,9 +8,10 @@ export declare class UsersController {
     create(createUserDto: CreateUserDto): Promise<User>;
     findAll(): Promise<User[]>;
     findOne(id: string): Promise<User>;
-    update(id: string, updateUserDto: UpdateUserDto): Promise<import("typeorm").UpdateResult>;
+    update(id: string, updateUserDto: UpdateUserDto): Promise<{
+        message: string;
+    }>;
     remove(id: string): Promise<{
-        statusCode: number;
         message: string;
     }>;
 }
