@@ -31,10 +31,10 @@ let UsersService = class UsersService {
         return this.userRepository.findOne({ where: { id } });
     }
     update(id, updateUserDto) {
-        return `This action updates a #${id} user`;
+        return this.userRepository.update(id, updateUserDto);
     }
     remove(id) {
-        return `This action removes a #${id} user`;
+        return this.userRepository.delete(id);
     }
 };
 exports.UsersService = UsersService;

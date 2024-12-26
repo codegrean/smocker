@@ -30,11 +30,20 @@ let UsersController = class UsersController {
     findOne(id) {
         return this.usersService.findOne(+id);
     }
-    update(id, updateUserDto) {
+    async update(id, updateUserDto) {
+        const user = await this.usersService.findOne(+id);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
         return this.usersService.update(+id, updateUserDto);
     }
-    remove(id) {
-        return this.usersService.remove(+id);
+    async remove(id) {
+        const user = await this.usersService.findOne(+id);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        await this.usersService.remove(+id);
+        return { statusCode: 204, message: 'User successfully deleted' };
     }
 };
 exports.UsersController = UsersController;
@@ -64,14 +73,14 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "remove", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
